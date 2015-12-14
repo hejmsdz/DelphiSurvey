@@ -1,0 +1,105 @@
+object AboutWindow: TAboutWindow
+  Left = 536
+  Height = 240
+  Top = 178
+  Width = 343
+  BorderStyle = bsDialog
+  Caption = 'About'
+  ClientHeight = 240
+  ClientWidth = 343
+  OnCreate = FormCreate
+  Position = poOwnerFormCenter
+  LCLVersion = '1.4.4.0'
+  object Heading: TLabel
+    Left = 24
+    Height = 61
+    Top = 16
+    Width = 291
+    Caption = 'Survey v1.0.0'
+    Font.CharSet = EASTEUROPE_CHARSET
+    Font.Height = -48
+    Font.Name = 'Trebuchet MS'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentColor = False
+    ParentFont = False
+  end
+  object Author: TLabel
+    Left = 104
+    Height = 15
+    Top = 120
+    Width = 129
+    Caption = 'by Mikołaj Rozwadowski'
+    ParentColor = False
+  end
+  object Description: TLabel
+    Left = 8
+    Height = 15
+    Top = 88
+    Width = 327
+    Caption = 'Project assignment for Programming basics laboratory classes'
+    ParentColor = False
+  end
+  object Email: TLabel
+    Cursor = crHandPoint
+    Left = 40
+    Height = 17
+    Top = 136
+    Width = 103
+    Caption = 'email comes here'
+    Font.CharSet = EASTEUROPE_CHARSET
+    Font.Color = clBlue
+    Font.Height = -13
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsUnderline]
+    ParentColor = False
+    ParentFont = False
+    OnClick = EmailClick
+  end
+  object Github: TLabel
+    Cursor = crHandPoint
+    Left = 48
+    Height = 17
+    Top = 184
+    Width = 240
+    Caption = 'https://github.com/hejmsdz/DelphiSurvey'
+    Font.CharSet = EASTEUROPE_CHARSET
+    Font.Color = clBlue
+    Font.Height = -13
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsUnderline]
+    ParentColor = False
+    ParentFont = False
+    OnClick = GithubClick
+  end
+  object IconsCredit: TLabel
+    Left = 40
+    Height = 15
+    Top = 218
+    Width = 64
+    Caption = 'Icons credit:'
+    ParentColor = False
+  end
+  object IconsLink: TLabel
+    Cursor = crHandPoint
+    Left = 112
+    Height = 17
+    Top = 216
+    Width = 191
+    Caption = 'http://p.yusukekamiyamane.com/'
+    Font.CharSet = EASTEUROPE_CHARSET
+    Font.Color = clBlue
+    Font.Height = -13
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsUnderline]
+    ParentColor = False
+    ParentFont = False
+    OnClick = IconsLinkClick
+  end
+end
