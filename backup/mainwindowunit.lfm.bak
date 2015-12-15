@@ -528,8 +528,8 @@ object MainWindow: TMainWindow
         ShortCut = 46
         OnClick = RecordRemoveMenuItemClick
       end
-      object RecordSortByMenuItem: TMenuItem
-        Caption = 'Sort by...'
+      object RecordSortMenuItem: TMenuItem
+        Caption = 'Sort'
         Bitmap.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
           2000000000000004000064000000640000000000000000000000000000000000
@@ -566,30 +566,7 @@ object MainWindow: TMainWindow
           79007979790079797900797979007C7C7C007F7F7F247F7F7F667F7F7F247C7C
           7C007979790079797900797979007979790078787800FFFFFF00
         }
-        object RecordSortBySupportsMenuItem: TMenuItem
-          Caption = 'Supports'
-          OnClick = RecordSortBySupportsMenuItemClick
-        end
-        object RecordSortBySexMenuItem: TMenuItem
-          Caption = 'Sex'
-          OnClick = RecordSortBySexMenuItemClick
-        end
-        object RecordSortByLocationMenuItem: TMenuItem
-          Caption = 'Location'
-          OnClick = RecordSortByLocationMenuItemClick
-        end
-        object RecordSortByEducationMenuItem: TMenuItem
-          Caption = 'Education'
-          OnClick = RecordSortByEducationMenuItemClick
-        end
-        object RecordSortByAgeMenuItem: TMenuItem
-          Caption = 'Age'
-          OnClick = RecordSortByAgeMenuItemClick
-        end
-        object RecordSortByVotedMenuItem: TMenuItem
-          Caption = 'Voted'
-          OnClick = RecordSortByVotedMenuItemClick
-        end
+        OnClick = RecordSortMenuItemClick
       end
     end
     object ViewMenu: TMenuItem

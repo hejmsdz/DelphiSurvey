@@ -13,6 +13,8 @@ uses
 {$R *.res}
 
 begin
+  Application.Title := 'Survey';
+  Application.Version:= '1.1.0';
   RequireDerivedFormResource := True;
   Application.Initialize;
   Application.CreateForm(TMainWindow, MainWindow);

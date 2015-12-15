@@ -15,7 +15,7 @@ object AboutWindow: TAboutWindow
     Height = 61
     Top = 16
     Width = 291
-    Caption = 'Survey v1.0.0'
+    Caption = 'Survey v1.1.0'
     Font.CharSet = EASTEUROPE_CHARSET
     Font.Height = -48
     Font.Name = 'Trebuchet MS'
@@ -37,7 +37,7 @@ object AboutWindow: TAboutWindow
     Height = 15
     Top = 88
     Width = 327
-    Caption = 'Project assignment for Programming basics laboratory classes'
+    Caption = 'Project assignment for Programming Basics laboratory classes'
     ParentColor = False
   end
   object Email: TLabel

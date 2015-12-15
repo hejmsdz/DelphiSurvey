@@ -10,20 +10,17 @@ uses
 
   DataStructuresUnit, FileIOUnit,
 
-  RecordWindowUnit, AboutWindowUnit;
+  RecordWindowUnit, SortWindowUnit, AboutWindowUnit;
 
 type
   { main application window }
+
+  { TMainWindow }
+
   TMainWindow = class(TForm)
     FilterGroupBox: TGroupBox;
     AgeCheckGroup: TCheckGroup;
-    RecordSortBySexMenuItem: TMenuItem;
-    RecordSortByLocationMenuItem: TMenuItem;
-    RecordSortByEducationMenuItem: TMenuItem;
-    RecordSortByAgeMenuItem: TMenuItem;
-    RecordSortByVotedMenuItem: TMenuItem;
-    RecordSortBySupportsMenuItem: TMenuItem;
-    RecordSortByMenuItem: TMenuItem;
+    RecordSortMenuItem: TMenuItem;
     ViewStatusBarMenuItem: TMenuItem;
     ViewClearFiltersMenuItem: TMenuItem;
     SexCheckGroup: TCheckGroup;
@@ -60,12 +57,7 @@ type
     procedure RecordCreateMenuItemClick(Sender: TObject);
     procedure RecordModifyMenuItemClick(Sender: TObject);
     procedure RecordRemoveMenuItemClick(Sender: TObject);
-    procedure RecordSortByAgeMenuItemClick(Sender: TObject);
-    procedure RecordSortByEducationMenuItemClick(Sender: TObject);
-    procedure RecordSortByLocationMenuItemClick(Sender: TObject);
-    procedure RecordSortBySexMenuItemClick(Sender: TObject);
-    procedure RecordSortBySupportsMenuItemClick(Sender: TObject);
-    procedure RecordSortByVotedMenuItemClick(Sender: TObject);
+    procedure RecordSortMenuItemClick(Sender: TObject);
     procedure SurveyListViewSelectItem(Sender: TObject; Item: TListItem;
       Selected: Boolean);
     procedure ViewClearFiltersMenuItemClick(Sender: TObject);
@@ -229,6 +221,7 @@ var
 begin
   win := TAboutWindow.Create(self);
   win.ShowModal;
+  win.Free;
 end;
 
 { add a new item }
@@ -283,47 +276,23 @@ begin
   end;
 end;
 
-{ sorting by different columns }
-procedure TMainWindow.RecordSortByAgeMenuItemClick(Sender: TObject);
+procedure TMainWindow.RecordSortMenuItemClick(Sender: TObject);
+var
+  win: TSortWindow;
 begin
-  List.SelectSort(@CompareAge);
-  DataChanged := True;
-  ReloadFromList;
-end;
-
-procedure TMainWindow.RecordSortByEducationMenuItemClick(Sender: TObject);
-begin
-  List.SelectSort(@CompareEducation);
-  DataChanged := True;
-  ReloadFromList;
-end;
-
-procedure TMainWindow.RecordSortByLocationMenuItemClick(Sender: TObject);
-begin
-  List.SelectSort(@CompareLocation);
-  DataChanged := True;
-  ReloadFromList;
-end;
-
-procedure TMainWindow.RecordSortBySexMenuItemClick(Sender: TObject);
-begin
-  List.SelectSort(@CompareSex);
-  DataChanged := True;
-  ReloadFromList;
-end;
-
-procedure TMainWindow.RecordSortBySupportsMenuItemClick(Sender: TObject);
-begin
-  List.SelectSort(@CompareSupports);
-  DataChanged := True;
-  ReloadFromList;
-end;
-
-procedure TMainWindow.RecordSortByVotedMenuItemClick(Sender: TObject);
-begin
-  List.SelectSort(@CompareVoted);
-  DataChanged := True;
-  ReloadFromList;
+  win := TSortWindow.Create(self);
+  if win.ShowModal = mrOK then
+  begin
+    try
+      List.SelectSort(win.FirstCriterion.ItemIndex, win.SecondCriterion.ItemIndex, win.Direction.ItemIndex=0);
+      DataChanged := True;
+      ReloadFromList;
+    except
+      on E: Exception do
+        Application.MessageBox(PChar('Failed to sort the list! '+E.Message), 'Error', MB_ICONSTOP);
+    end;
+  end;
+  win.Free;
 end;
 
 { on selecting/deselecting a list item, enable/disable the modify and remove menu items }
@@ -430,7 +399,7 @@ begin
     it.Next;
   end;
 
-  RecordSortByMenuItem.Enabled := (n > 1);
+  RecordSortMenuItem.Enabled := (n > 1);
 
   if n = 0 then
     StatusBar.Panels[0].Text := 'The database is empty'

@@ -53,7 +53,7 @@ type
       constructor Create;
       procedure Append(survey: TSurvey);
       procedure Remove(item: PListItem);
-      procedure SelectSort(compare: FCompareSurveys; ascending: Boolean = true);
+      procedure SelectSort(compare1, compare2: Integer; ascending: Boolean = true);
       procedure SwapItems(a, b: PListItem);
       procedure Clear;
       function Iterate: TIterator;
@@ -75,6 +75,8 @@ const
   LocationValues: array[TLocation] of String = ('less than 15k', '15k - 50k', '50k - 100k', '100k - 300k', 'over 300k');
   EducationValues: array[TEducation] of String = ('primary', 'secondary', 'higher');
   AgeValues: array[TAge] of String = ('18 - 25', '26 - 35', '36 - 45', '46 - 60', '60+');
+  { comparison functions }
+  Comparators: array[0..5] of FCompareSurveys = (@CompareSupports, @CompareSex, @CompareLocation, @CompareEducation, @CompareAge, @CompareVoted);
 
 implementation
 
@@ -170,12 +172,12 @@ begin
   Tail := nil;
 end;
 
-{ sort the list using a comparison function, by Selection Sort }
-procedure TCustomList.SelectSort(compare: FCompareSurveys; ascending: Boolean = true);
+{ sort the list using two comparison functions, by Selection Sort }
+procedure TCustomList.SelectSort(compare1, compare2: Integer; ascending: Boolean = true);
 var
   it1, it2: TIterator;
   first, min: PListItem;
-  one: Integer;
+  one, d1, d2: Integer;
 begin
   if ascending then one := 1 else one := -1;
   it1 := Iterate;
@@ -187,7 +189,13 @@ begin
     it2 := TIterator.Create(it1.GetCurrent^.Next);
     while it2.Exists do
     begin
-      if compare(first^.Survey, it2.GetCurrentItem)*one > 0 then min := it2.GetCurrent;
+      d1 := Comparators[compare1](min^.Survey, it2.GetCurrentItem)*one;
+      if compare2 >= 0 then
+        d2 := Comparators[compare2](min^.Survey, it2.GetCurrentItem)*one
+      else
+        d2 := 0;
+
+      if (d1 > 0) or ((d1 = 0) and (d2 > 0)) then min := it2.GetCurrent;
       it2.Next;
     end;
 

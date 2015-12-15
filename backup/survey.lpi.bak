@@ -6,7 +6,7 @@
     <General>
       <SessionStorage Value="InProjectDir"/>
       <MainUnit Value="0"/>
-      <Title Value="survey"/>
+      <Title Value="Survey"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
       <Icon Value="0"/>
@@ -15,6 +15,9 @@
       <EnableI18N LFM="False"/>
     </i18n>
     <VersionInfo>
+      <UseVersionInfo Value="True"/>
+      <MajorVersionNr Value="1"/>
+      <MinorVersionNr Value="1"/>
       <StringTable ProductVersion=""/>
     </VersionInfo>
     <BuildModes Count="1">
@@ -33,7 +36,7 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="6">
+    <Units Count="7">
       <Unit0>
         <Filename Value="survey.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -72,6 +75,14 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="AboutWindowUnit"/>
       </Unit5>
+      <Unit6>
+        <Filename Value="sortwindowunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SortWindow"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SortWindowUnit"/>
+      </Unit6>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
