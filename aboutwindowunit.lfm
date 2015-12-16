@@ -15,7 +15,7 @@ object AboutWindow: TAboutWindow
     Height = 61
     Top = 16
     Width = 291
-    Caption = 'Survey v1.1.0'
+    Caption = 'Survey v1.1.1'
     Font.CharSet = EASTEUROPE_CHARSET
     Font.Height = -48
     Font.Name = 'Trebuchet MS'

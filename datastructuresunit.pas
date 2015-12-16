@@ -151,6 +151,8 @@ begin
     Tail := item^.Prev;
   if item^.Prev <> nil then
     item^.Prev^.Next := item^.Next;
+  if item^.Next <> nil then
+    item^.Next^.Prev := item^.Prev;
   Dispose(item);
 end;
 
