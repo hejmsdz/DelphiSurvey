@@ -17,8 +17,7 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="1"/>
-      <MinorVersionNr Value="1"/>
-      <RevisionNr Value="1"/>
+      <MinorVersionNr Value="2"/>
       <StringTable ProductVersion=""/>
     </VersionInfo>
     <BuildModes Count="1">
@@ -32,12 +31,15 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="1">
+    <RequiredPackages Count="2">
       <Item1>
-        <PackageName Value="LCL"/>
+        <PackageName Value="hyperlink"/>
       </Item1>
+      <Item2>
+        <PackageName Value="LCL"/>
+      </Item2>
     </RequiredPackages>
-    <Units Count="7">
+    <Units Count="8">
       <Unit0>
         <Filename Value="survey.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -84,6 +86,11 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="SortWindowUnit"/>
       </Unit6>
+      <Unit7>
+        <Filename Value="pluginsunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="PluginsUnit"/>
+      </Unit7>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

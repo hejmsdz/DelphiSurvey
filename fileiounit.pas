@@ -11,19 +11,18 @@ uses
 type
   TSurveyFile = File of TSurvey;
 
-function ReadFile(const filename: String; out num: Integer): TCustomList;
+procedure ReadFile(const filename: String; var list: TCustomList; out num: Integer);
 procedure WriteToFile(const filename: String; list: TCustomList; out num: Integer);
 
 implementation
 
 { load a file into a linked list }
-function ReadFile(const filename: String; out num: Integer): TCustomList;
+procedure ReadFile(const filename: String; var list: TCustomList; out num: Integer);
 var
   inFile: TSurveyFile;
   survey: TSurvey;
 begin
   num := 0;
-  Result := TCustomList.Create;
 
   try
     AssignFile(inFile, filename);
@@ -32,7 +31,7 @@ begin
     while not Eof(inFile) do
     begin
       Read(inFile, survey);
-      Result.Append(survey);
+      list.Append(survey);
       Inc(num);
     end;
   finally

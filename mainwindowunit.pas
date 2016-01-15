@@ -6,13 +6,15 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, StrUtils, Forms, Controls, Graphics, Dialogs, ComCtrls,
-  Buttons, Menus, ActnList, LCLType, ExtCtrls, StdCtrls,
+  Buttons, Menus, ActnList, LCLType, ExtCtrls, StdCtrls, Windows, LMessages,
 
-  DataStructuresUnit, FileIOUnit,
+  DataStructuresUnit, FileIOUnit, PluginsUnit,
 
   RecordWindowUnit, SortWindowUnit, AboutWindowUnit;
 
 type
+
+  //procedure ShowWindow; stdcall external 'Example_lib.dll' name 'ShowWindow';
   { main application window }
 
   { TMainWindow }
@@ -20,6 +22,8 @@ type
   TMainWindow = class(TForm)
     FilterGroupBox: TGroupBox;
     AgeCheckGroup: TCheckGroup;
+    LoadDLLItem: TMenuItem;
+    DLLDialog: TOpenDialog;
     RecordSortMenuItem: TMenuItem;
     ViewStatusBarMenuItem: TMenuItem;
     ViewClearFiltersMenuItem: TMenuItem;
@@ -33,6 +37,7 @@ type
     SurveyListView: TListView;
     MainMenu: TMainMenu;
     FileMenu: TMenuItem;
+    ExtrasMenu: TMenuItem;
     HelpMenu: TMenuItem;
     FileNewMenuItem: TMenuItem;
     FileOpenMenuItem: TMenuItem;
@@ -54,6 +59,7 @@ type
     procedure FileQuitMenuItemClick(Sender: TObject);
     procedure FileSaveMenuItemClick(Sender: TObject);
     procedure HelpAboutMenuItemClick(Sender: TObject);
+    procedure LoadDLLItemClick(Sender: TObject);
     procedure RecordCreateMenuItemClick(Sender: TObject);
     procedure RecordModifyMenuItemClick(Sender: TObject);
     procedure RecordRemoveMenuItemClick(Sender: TObject);
@@ -66,6 +72,7 @@ type
     List: TCustomList;
     DataChanged: Boolean;
     Filename: String;
+    Plugins: TPluginManager;
     procedure OpenFile(fname: String);
     function AskToSaveChanges: Integer;
     function GetSelectedItem: PListItem;
@@ -74,14 +81,15 @@ type
     procedure ResetFilters;
     procedure ResetFilter(group: TCheckGroup);
     procedure ReloadFromList;
+    procedure SetDataChanged;
   public
-    { public declarations }
+    MsgID: LongWord;
+    procedure WndProc(var Msg: TLMessage); override;
   end;
 var
   MainWindow: TMainWindow;
 
 implementation
-
 {$R *.lfm}
 
 { TMainWindow }
@@ -92,6 +100,9 @@ begin
   DataChanged := false;
   Filename := '';
   ReloadFromList;
+
+  { initialize plugin engine }
+  Plugins := TPluginManager.Create(ExtrasMenu, List, @SetDataChanged);
 
   SupportsCheckGroup.Items.AddStrings(BoolValues);
   SexCheckGroup.Items.AddStrings(SexValues);
@@ -169,14 +180,12 @@ end;
 procedure TMainWindow.OpenFile(fname: String);
 var
   num: Integer;
-  newList: TCustomList;
 begin
   try
-    newList := ReadFile(fname, num);
+    List.Clear;
+    ReadFile(fname, List, num);
     Filename := fname;
     DataChanged := false;
-    List.Clear;
-    List := newList;
     ReloadFromList;
   except
     on E: Exception do
@@ -222,6 +231,16 @@ begin
   win := TAboutWindow.Create(self);
   win.ShowModal;
   win.Free;
+end;
+
+procedure TMainWindow.LoadDLLItemClick(Sender: TObject);
+begin
+  try
+    if DLLDialog.Execute then Plugins.Load(PChar(DLLDialog.FileName));
+  except
+    on E: Exception do
+      Application.MessageBox(PChar('Failed to load the library! '+E.Message), 'Error', MB_ICONSTOP);
+  end;
 end;
 
 { add a new item }
@@ -364,22 +383,25 @@ begin
     Result := true;
 end;
 
+procedure TMainWindow.SetDataChanged;
+begin
+  DataChanged := true;
+  ReloadFromList;
+end;
+
 procedure TMainWindow.ReloadFromList;
 var
   it: TIterator;
   survey: TSurvey;
-  n: Integer;
   matched: Integer;
 begin
   UpdateTitle;
   it := List.Iterate();
   SurveyListView.Items.Clear;
-  n := 0;
   matched := 0;
 
   while it.Exists do
   begin
-    Inc(n);
     survey := it.GetCurrentItem;
     if CheckFilters(survey) then
     begin
@@ -387,7 +409,7 @@ begin
       with SurveyListView.Items.Add do
       begin
         Data := it.getCurrent;
-        Caption := IntToStr(n);
+        Caption := IntToStr(it.Counter+1);
         SubItems.Add(BoolValues[survey.Supports]);
         SubItems.Add(SexValues[survey.Sex]);
         SubItems.Add(LocationValues[survey.Location]);
@@ -399,14 +421,23 @@ begin
     it.Next;
   end;
 
-  RecordSortMenuItem.Enabled := (n > 1);
+  RecordSortMenuItem.Enabled := (it > 1);
 
-  if n = 0 then
+  if it <= 0 then
     StatusBar.Panels[0].Text := 'The database is empty'
-  else if n = matched then
-    StatusBar.Panels[0].Text := IntToStr(n)+' row'+IfThen(n=1, '', 's')+' in the database'
+  else if it > matched then
+    StatusBar.Panels[0].Text := 'Showing '+IntToStr(matched)+' out of '+IntToStr(it.Counter)+' row'+IfThen(it.Counter=1, '', 's')
   else
-    StatusBar.Panels[0].Text := 'Showing '+IntToStr(matched)+' out of '+IntToStr(n)+' row'+IfThen(n=1, '', 's');
+    StatusBar.Panels[0].Text := IntToStr(it.Counter)+' row'+IfThen(it.Counter=1, '', 's')+' in the database';
 end;
 
+procedure TMainWindow.WndProc(var Msg: TLMessage);
+begin
+  inherited WndProc(Msg);
+  if Msg.msg = MsgID then
+  begin
+    Application.Restore;
+    SetForegroundWindow(Application.MainForm.Handle);
+  end;
+end;
 end.

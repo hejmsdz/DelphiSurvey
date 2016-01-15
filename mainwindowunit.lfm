@@ -1,7 +1,7 @@
 object MainWindow: TMainWindow
-  Left = 385
+  Left = 384
   Height = 470
-  Top = 178
+  Top = 160
   Width = 820
   Caption = 'Survey'
   ClientHeight = 450
@@ -618,6 +618,13 @@ object MainWindow: TMainWindow
         OnClick = ViewStatusBarMenuItemClick
       end
     end
+    object ExtrasMenu: TMenuItem
+      Caption = 'Plugins'
+      object LoadDLLItem: TMenuItem
+        Caption = 'Load from a DLL...'
+        OnClick = LoadDLLItemClick
+      end
+    end
     object HelpMenu: TMenuItem
       Caption = 'Help'
       object HelpAboutMenuItem: TMenuItem
@@ -673,6 +680,12 @@ object MainWindow: TMainWindow
     Title = 'Save'
     Filter = 'PSS|*.pss'
     left = 144
+    top = 376
+  end
+  object DLLDialog: TOpenDialog
+    Title = 'Load a plugin'
+    Filter = 'Dynamic Load Libraries|*.dll'
+    left = 240
     top = 376
   end
 end

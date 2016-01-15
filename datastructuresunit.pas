@@ -34,14 +34,16 @@ type
 
   { iterator class for convenient processing the list }
   TIterator = class
+    private
+      Current: PListItem;
+      FCounter: Integer;
     public
       constructor Create(list: PListItem);
       function GetCurrent: PListItem;
       function GetCurrentItem: TSurvey;
       function Exists: Boolean;
       procedure Next;
-    private
-      Current: PListItem;
+      property Counter: Integer read FCounter;
   end;
 
   { comparison function signature for sorting }
@@ -61,12 +63,26 @@ type
       Head, Tail: PListItem;
   end;
 
+  { used by plugins }
+  TAction = record
+    Caption: PChar;
+    ProcIndex: Integer;
+  end;
+  TActionArray = array of TAction;
+
   function CompareSupports(a, b: TSurvey): Integer;
   function CompareSex(a, b: TSurvey): Integer;
   function CompareLocation(a, b: TSurvey): Integer;
   function CompareEducation(a, b: TSurvey): Integer;
   function CompareAge(a, b: TSurvey): Integer;
   function CompareVoted(a, b: TSurvey): Integer;
+
+  operator >(a: TIterator; b: Integer): Boolean;
+  operator >=(a: TIterator; b: Integer): Boolean;
+  operator <(a: TIterator; b: Integer): Boolean;
+  operator <=(a: TIterator; b: Integer): Boolean;
+
+  function RecordFromStrings(SSupports, SSex, SLocation, SEducation, SAge, SVoted: String): TSurvey;
 
 const
   { human-readable enum (and bool) value names }
@@ -84,6 +100,7 @@ implementation
 constructor TIterator.Create(list: PListItem);
 begin
   Current := list;
+  FCounter := 0;
 end;
 
 { access current iterator pointer }
@@ -108,6 +125,7 @@ end;
 procedure TIterator.Next;
 begin
   Current := Current^.Next;
+  Inc(FCounter);
 end;
 
 { initiate a list }
@@ -172,6 +190,23 @@ begin
   end;
   Head := nil;
   Tail := nil;
+end;
+
+operator >(a: TIterator; b: Integer): Boolean;
+begin
+  Result := (a.Counter > b);
+end;
+operator >=(a: TIterator; b: Integer): Boolean;
+begin
+  Result := (a.Counter >= b);
+end;
+operator <(a: TIterator; b: Integer): Boolean;
+begin
+  Result := (a.Counter < b);
+end;
+operator <=(a: TIterator; b: Integer): Boolean;
+begin
+  Result := (a.Counter <= b);
 end;
 
 { sort the list using two comparison functions, by Selection Sort }
@@ -253,4 +288,41 @@ function CompareVoted(a, b: TSurvey): Integer;
 begin
   Result := Ord(a.Voted) - Ord(b.Voted);
 end;
+
+function RecordFromStrings(SSupports, SSex, SLocation, SEducation, SAge, SVoted: String): TSurvey;
+begin
+  { I couldn't figure out a loop based soluton }
+  if SSupports = BoolValues[true] then Result.Supports :=true
+  else if SSupports = BoolValues[false] then Result.Supports :=false
+  else raise Exception.Create('Unknown value');
+
+  if SSex = SexValues[M] then Result.Sex :=M
+  else if SSex = SexValues[F] then Result.Sex :=F
+  else raise Exception.Create('Unknown value');
+
+  if SLocation = LocationValues[LessThan15K] then Result.Location :=LessThan15K
+  else if SLocation = LocationValues[Over15K] then Result.Location :=Over15K
+  else if SLocation = LocationValues[Over50K] then Result.Location :=Over50K
+  else if SLocation = LocationValues[Over100K] then Result.Location :=Over100K
+  else if SLocation = LocationValues[Over300K] then Result.Location :=Over300K
+  else raise Exception.Create('Unknown value');
+
+  if SEducation = EducationValues[Primary] then Result.Education :=Primary
+  else if SEducation = EducationValues[Secondary] then Result.Education :=Secondary
+  else if SEducation =  EducationValues[Higher] then Result.Education :=Higher
+  else raise Exception.Create('Unknown value');
+
+  if SAge = AgeValues[_18_25] then Result.Age :=_18_25
+  else if SAge = AgeValues[_26_35] then Result.Age :=_26_35
+  else if SAge = AgeValues[_36_45] then Result.Age :=_36_45
+  else if SAge = AgeValues[_46_60] then Result.Age :=_46_60
+  else if SAge = AgeValues[Over60] then Result.Age :=Over60
+  else raise Exception.Create('Unknown value');
+
+  if SVoted = BoolValues[true] then Result.Voted :=true
+  else if SVoted = BoolValues[false] then Result.Voted :=false
+  else raise Exception.Create('Unknown value');
+end;
+
 end.
+

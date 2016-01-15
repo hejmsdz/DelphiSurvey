@@ -63,7 +63,7 @@ begin
   LocationComboBox.ItemIndex := Ord(Survey.Location);
   EducationComboBox.ItemIndex := Ord(Survey.Education);
   AgeComboBox.ItemIndex := Ord(Survey.Age);
-  VotedCheckbox.Checked := Survey.Supports;
+  VotedCheckbox.Checked := Survey.Voted;
 end;
 
 { validate the input, publish output data and close }

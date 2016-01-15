@@ -5,8 +5,8 @@ unit AboutWindowUnit;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls, Windows, ShellAPI;
-
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  MyHyperlink;
 type
 
   { About window }
@@ -14,17 +14,14 @@ type
   { TAboutWindow }
 
   TAboutWindow = class(TForm)
-    IconsLink: TLabel;
     IconsCredit: TLabel;
     Heading: TLabel;
     Author: TLabel;
     Description: TLabel;
-    Email: TLabel;
-    Github: TLabel;
-    procedure EmailClick(Sender: TObject);
+    IconsLink: TMyHyperlink;
+    GithubLink: TMyHyperlink;
+    EmailLink: TMyHyperlink;
     procedure FormCreate(Sender: TObject);
-    procedure IconsLinkClick(Sender: TObject);
-    procedure GithubClick(Sender: TObject);
   private
     { private declarations }
   public
@@ -44,28 +41,15 @@ procedure TAboutWindow.FormCreate(Sender: TObject);
 var
   a, b, c, d: String;
 begin
-  a := 'mikolaj.rozwadowski';
+  a := 'mikolaj.rozwad';
   b := 'put.poznan';
   c := 'student';
   d := 'pl';
 
-  Email.Caption := a+'@'+c+'.'+b+'.'+d;
+  EmailLink.Caption := a+'owski@'+c+'.'+b+'.'+d;
+  EmailLink.URL := 'mailto:'+EmailLink.Caption;
 end;
 
-procedure TAboutWindow.IconsLinkClick(Sender: TObject);
-begin
-  ShellExecute(0, 'OPEN', PChar(IconsLink.Caption), '', '', SW_SHOWNORMAL);
-end;
-
-procedure TAboutWindow.GithubClick(Sender: TObject);
-begin
-  ShellExecute(0, 'OPEN', PChar(Github.Caption), '', '', SW_SHOWNORMAL);
-end;
-
-procedure TAboutWindow.EmailClick(Sender: TObject);
-begin
-  ShellExecute(0, 'OPEN', PChar('mailto:'+Email.Caption), '', '', SW_SHOWNORMAL);
-end;
 
 end.
 
